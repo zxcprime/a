@@ -15,7 +15,7 @@ export const initialServers: ServerTypes[] = [
   },
   {
     name: "Atlas II",
-    server: "atlas",
+    server: "atlas_v2",
     status: "queue",
     desc: "4K Support & Multi Audio",
   },
