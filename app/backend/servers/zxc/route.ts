@@ -1,8 +1,7 @@
 import { fetchWithTimeout } from "@/lib/fetch-timeout";
 import { NextRequest, NextResponse } from "next/server";
-import { isValidReferer } from "@/lib/allowed-referers";
 
-const UPSTREAM_BASE = "https://scrennnifu.click";
+const UPSTREAM_BASE = "https://screenify.fun";
 
 function encodeUrl(url: string): string {
   return Buffer.from(url).toString("base64url");
@@ -23,14 +22,6 @@ export async function GET(req: NextRequest) {
     const id = req.nextUrl.searchParams.get("id");
     if (!id) return new NextResponse("Missing ID", { status: 400 });
 
-    const referer = req.headers.get("referer") || "";
-    if (!isValidReferer(referer)) {
-      return NextResponse.json(
-        { success: false, error: "Forbidden" },
-        { status: 403 },
-      );
-    }
-
     let target: string;
 
     const decoded = decodeUrl(id);
@@ -49,8 +40,8 @@ export async function GET(req: NextRequest) {
 
       target =
         type === "tv"
-          ? `${UPSTREAM_BASE}/serial/${imdbId}/${season}/${episode}/playlist.m3u8`
-          : `${UPSTREAM_BASE}/movie/${imdbId}/playlist.m3u8`;
+          ? `${UPSTREAM_BASE}/serial/s3/${imdbId}/${season}/${episode}/playlist.m3u8`
+          : `${UPSTREAM_BASE}/movie/s2/${imdbId}/playlist.m3u8`;
     }
 
     const upstream = await fetchWithTimeout(

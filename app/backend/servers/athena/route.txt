@@ -2,18 +2,19 @@ import { fetchWithTimeout } from "@/lib/fetch-timeout";
 import { NextRequest, NextResponse } from "next/server";
 import { validateBackendToken } from "@/lib/validate-token";
 import { isValidReferer } from "@/lib/allowed-referers";
+import { FIELD_MAP } from "@/lib/token";
 
 export async function GET(req: NextRequest) {
   try {
-    const id = req.nextUrl.searchParams.get("a");
+    const id = req.nextUrl.searchParams.get(FIELD_MAP.id);
     const media_type = req.nextUrl.searchParams.get("b");
-    const season = req.nextUrl.searchParams.get("c");
-    const episode = req.nextUrl.searchParams.get("d");
-    const imdbId = req.nextUrl.searchParams.get("e");
-    const ts = Number(req.nextUrl.searchParams.get("gago"));
-    const token = req.nextUrl.searchParams.get("putangnamo")!;
+    const season = req.nextUrl.searchParams.get(FIELD_MAP.season);
+    const episode = req.nextUrl.searchParams.get(FIELD_MAP.episode);
+    const imdbId = req.nextUrl.searchParams.get(FIELD_MAP.imdbId); // "ref"
+    const ts = Number(req.nextUrl.searchParams.get(FIELD_MAP.ts));
+    const token = req.nextUrl.searchParams.get(FIELD_MAP.token)!;
+    const f_token = req.nextUrl.searchParams.get(FIELD_MAP.fToken)!;
 
-    const f_token = req.nextUrl.searchParams.get("f_token")!;
     if (!id || !media_type || !ts || !token) {
       return NextResponse.json(
         { success: false, error: "need token" },
@@ -21,13 +22,13 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // ⏱ expire after 8 seconds
     if (Date.now() - Number(ts) > 8000) {
       return NextResponse.json(
         { success: false, error: "Invalid token" },
         { status: 403 },
       );
     }
+
     if (!validateBackendToken(id, f_token, ts, token)) {
       return NextResponse.json(
         { success: false, error: "Invalid token" },
@@ -35,7 +36,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // block direct /api access
     const referer = req.headers.get("referer") || "";
     if (!isValidReferer(referer)) {
       return NextResponse.json(
@@ -46,22 +46,23 @@ export async function GET(req: NextRequest) {
 
     const upstreamM3u8 =
       media_type === "tv"
-        ? `https://scrennnifu.click/serial/${imdbId}/${season}/${episode}/playlist.m3u8`
-        : `https://scrennnifu.click/movie/${imdbId}/playlist.m3u8`;
+        ? `https://www.screenify.fun/hls/s3/serial/${imdbId}/${season}/${episode}/playlist.m3u8`
+        : `https://www.screenify.fun/hls/s4/movie/${imdbId}/playlist.m3u8`;
 
     try {
       const upstream = await fetchWithTimeout(
         upstreamM3u8,
         {
           headers: {
-            Referer: "https://screenify.fun/",
-            Origin: "https://screenify.fun/",
-            "User-Agent": "Mozilla/5.0",
+            Referer: "https://www.screenify.fun/",
+            Origin: "https://www.screenify.fun/",
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
             Accept: "*/*",
           },
           cache: "no-store",
         },
-        12000, // 5-second timeout
+        12000,
       );
 
       if (!upstream.ok) {
@@ -76,18 +77,10 @@ export async function GET(req: NextRequest) {
         { status: 504 },
       );
     }
-
-    const sourceLink = `/backend/servers/zxc?id=${media_type}-${imdbId}${
-      media_type === "tv" ? `-${season}-${episode}` : ""
-    }`;
+    const upstreamPath = new URL(upstreamM3u8).pathname;
     return NextResponse.json({
       success: true,
-      links: [
-        {
-          type: "hls",
-          link: sourceLink,
-        },
-      ],
+      links: [{ type: "hls", link: `/backend/proxy/main${upstreamPath}` }],
       subtitles: [],
     });
   } catch (err) {
