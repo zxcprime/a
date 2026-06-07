@@ -13,7 +13,7 @@ export default function DevToolGuard() {
   return (
     <Script
       src="https://cdn.jsdelivr.net/npm/disable-devtool@latest"
-      strategy="beforeInteractive"
+      strategy="afterInteractive"
       disable-devtool-auto=""
     />
   );
