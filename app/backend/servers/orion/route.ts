@@ -190,45 +190,31 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const hlsSource =
-      sources.find((s) => s.type === "mp4") ??
-      sources.find((s) => s.type === "hls" && s.label === "LS-25") ??
-      sources.find((s) => s.type === "hls");
+    // ─── STEP 3: Find first working proxied source ────────────────────────────
+    for (const source of sources) {
+      const proxiedUrl = `https://holly-3.${randomWorker()}.workers.dev/?url=${encodeURIComponent(source.file)}`;
+      const res = await fetchWithTimeout(
+        proxiedUrl,
+        { method: "HEAD", headers: { Range: "bytes=0-1" } },
+        3000,
+      ).catch(() => null);
 
-    if (!hlsSource) {
-      return NextResponse.json(
-        { success: false, error: "No usable source found" },
-        { status: 404 },
-      );
+      if (res?.ok) {
+        return NextResponse.json({
+          success: true,
+          c: !!cached,
+          links: [
+            { type: source.type === "hls" ? "hls" : "mp4", link: proxiedUrl },
+          ],
+          subtitles: [],
+        });
+      }
     }
 
-    // ─── STEP 3: Proxy the stream URL ─────────────────────────────────────────
-    const proxiedUrl = `https://holly-3.${randomWorker()}.workers.dev/?url=${encodeURIComponent(hlsSource.file)}`;
-
-    const proxyCheck = await fetchWithTimeout(
-      proxiedUrl,
-      { method: "GET", headers: { Range: "bytes=0-1" } },
-      5000,
-    ).catch(() => null);
-
-    if (!proxyCheck?.ok) {
-      return NextResponse.json(
-        { success: false, error: "Holly proxy check failed" },
-        { status: 502 },
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      c: !!cached,
-      links: [
-        {
-          type: hlsSource.type === "hls" ? "hls" : "mp4",
-          link: proxiedUrl,
-        },
-      ],
-      subtitles: [],
-    });
+    return NextResponse.json(
+      { success: false, error: "All sources failed proxy check" },
+      { status: 502 },
+    );
   } catch (err) {
     console.error("Holly route error:", err);
     return NextResponse.json(
