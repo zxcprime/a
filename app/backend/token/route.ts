@@ -28,7 +28,7 @@ function generateBackendToken(xt: string, id: string) {
   // returns: { sig: "...", rt: 1234567890 }
 }
 
-const blockedIPs = ["45.86.86.43"];
+const blockedIPs = ["45.86.86.43", "192.142.18.175"];
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
