@@ -16,7 +16,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Failed" }, { status: res.status });
 
   const base = new URL(url);
-  const proxy = req.nextUrl.origin + "/backend/proxy";
+  const proto = req.headers.get("x-forwarded-proto") ?? "https";
+  const host = req.headers.get("host")!;
+  const proxy = `${proto}://${host}/backend/proxy`;
 
   const rewritten = (await res.text())
     .split("\n")
