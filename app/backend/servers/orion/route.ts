@@ -236,6 +236,10 @@ const supabase = createClient(
 );
 
 const HOLLY_WORKERS = [
+  "test7-337",
+  "test6-cb9",
+  "test9-6da",
+  "test8-98b",
   "zxcprime5",
   "zxcprime6",
   "primezxc4",
