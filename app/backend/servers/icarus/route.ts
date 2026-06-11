@@ -274,6 +274,10 @@ export async function GET(req: NextRequest) {
       );
 
     const proxies = [
+      "https://proxy.test4-eb0.workers.dev/",
+      "https://proxy.test3-ed1.workers.dev/",
+      "https://proxy.test2-425.workers.dev/",
+      "https://proxy.test1-845.workers.dev/",
       "https://proxy.zxcprime4.workers.dev/",
       "https://proxy.zxcprime3.workers.dev/",
       "https://proxy.zxcprime2.workers.dev/",
@@ -302,6 +306,8 @@ export async function GET(req: NextRequest) {
       "https://damp-bird-f3a9.jerometecsonn.workers.dev/",
       "https://damp-bonus-5625.mosangfour.workers.dev/",
       "https://still-butterfly-9b3e.zxcprime360.workers.dev/",
+
+      //current  = 28 goal =35 need = 7
     ];
 
     const shuffledProxies = [...proxies].sort(() => Math.random() - 0.5);
