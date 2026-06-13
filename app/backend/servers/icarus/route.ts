@@ -78,8 +78,12 @@ export async function getWorkingProxy(url: string, proxies: string[]) {
 export async function GET(req: NextRequest) {
   const logRequest = (status: number, reason: string) => {
     const tmdbId = req.nextUrl.searchParams.get(FIELD_MAP.id);
+    const mediaType = req.nextUrl.searchParams.get("b");
+    const season = req.nextUrl.searchParams.get(FIELD_MAP.season);
+    const episode = req.nextUrl.searchParams.get(FIELD_MAP.episode);
+    const extra = mediaType === "tv" ? ` s=${season} e=${episode}` : "";
     console.log(
-      `[icarus] tmdbId=${tmdbId} ip=${req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown"} status=${status} reason=${reason}`,
+      `[ICARUS] ${tmdbId}-${mediaType}${extra} | status=${status} | reason=${reason}`,
     );
   };
   try {
