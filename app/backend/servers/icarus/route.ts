@@ -195,7 +195,7 @@ export async function GET(req: NextRequest) {
 
       const selectedItem = items.find((item: any) => {
         const itemTitle = item.title?.toLowerCase().replace(/-/g, " ") || "";
-        const itemWords = itemTitle.split(/\s+/).filter(Boolean);
+        // const itemWords = itemTitle.split(/\s+/).filter(Boolean);
         const itemReleaseDate = item.releaseDate;
         if (LANG_TAGS.test(itemTitle)) return false;
 
@@ -207,7 +207,14 @@ export async function GET(req: NextRequest) {
           (dateObj.getFullYear() * 12 + dateObj.getMonth());
         if (Math.abs(diff) > 1) return false;
 
-        if (queryWords.length <= 2 && itemWords.length !== queryWords.length)
+        const itemTitleClean = itemTitle
+          .replace(/\bs\d+(-s\d+)?\b/gi, "")
+          .trim();
+        const itemWordsClean = itemTitleClean.split(/\s+/).filter(Boolean);
+        if (
+          queryWords.length <= 2 &&
+          itemWordsClean.length !== queryWords.length
+        )
           return false;
         return queryWords.every((word) => itemTitle.includes(word));
       });
