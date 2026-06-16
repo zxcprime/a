@@ -359,7 +359,7 @@ export default function Player() {
   useEffect(() => {
     setLoaded(false);
   }, [serverIndex]);
-
+  console.log("sds", servers[serverIndex].status);
   useEffect(() => {
     if (!mergeSubtitles.length) return;
 
@@ -513,10 +513,21 @@ export default function Player() {
               loaded ? "opacity-100" : "opacity-0",
             )}
           >
-            <img
+            <motion.img
               src={`https://image.tmdb.org/t/p/original/${metadata?.backdrop_path}`}
               alt=""
-              className="h-full w-full object-cover transition-opacity duration-700"
+              className="h-full w-full object-cover"
+              animate={{
+                filter:
+                  servers[serverIndex].status === "checking" ||
+                  servers[serverIndex].status === "queue"
+                    ? "grayscale(1) contrast(1.3) brightness(0.75)"
+                    : "grayscale(0)",
+              }}
+              transition={{
+                duration: 0.7,
+                ease: "easeInOut",
+              }}
               onLoad={() => setLoaded(true)}
             />
           </motion.div>
