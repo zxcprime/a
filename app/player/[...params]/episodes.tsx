@@ -51,7 +51,7 @@ export default function Episodes({
         onPointerMove={lockTimer}
         className="lg:translate-y-0.5 translate-y-1 text-white/80 hover:text-white cursor-pointer"
       >
-        <EpisodesIcon className="lg:size-10.5 md:size-10 size-7.5 " />
+        <EpisodesIcon className="lg:size-10.5 md:size-8 size-7.5 landscape:size-6" />
       </button>
 
       <AnimatePresence>

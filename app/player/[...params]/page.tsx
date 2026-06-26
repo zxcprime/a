@@ -33,6 +33,7 @@ import LoadingMetadata from "./logo";
 import { ArrowLeftIcon } from "@/components/icons/arrow";
 import Link from "next/link";
 import { useTmdbDetails } from "@/hooks/fetch-details";
+import { useAdStore2 } from "@/zustand/ad-store2";
 
 export default function Player() {
   // ─── URL Params ─────────────────────────────────────────────────────────────
@@ -72,7 +73,7 @@ export default function Player() {
   const [loaded, setLoaded] = useState(false);
 
   // ─── Settings ────────────────────────────────────────────────────────────────
-  const triggerAd = useAdStore((state) => state.triggerAd);
+  const triggerAd = useAdStore2((state) => state.triggerAd);
   const aspectRatio = useSettingsStore(
     (s) => s.values["Aspect Ratio"]?.id ?? "16:9",
   );
@@ -228,7 +229,7 @@ export default function Player() {
       load,
       handleServerFail,
     });
-  const timer = isMobile ? 5000 : 5000;
+  const timer = isMobile ? 5000000 : 5000000;
   const { isVisible, resetTimer, setIsVisible, lockTimer } =
     useHiddenOverlay(timer);
 

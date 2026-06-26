@@ -19,7 +19,7 @@ import Episodes from "../episodes";
 import { useRouter } from "next/navigation";
 import { DubTypes, QualityTrack } from "@/hooks/source";
 import Link from "next/link";
-import { Cloud, Layers2, Server } from "lucide-react";
+import { Cloud, Layers2, Lock, Server } from "lucide-react";
 import { CloudIcon } from "@/components/icons/cloud";
 import { ServerIcon } from "@/components/icons/server";
 import { DownloadIcon } from "@/components/icons/download";
@@ -141,22 +141,46 @@ export default function MainControls({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="z-10 absolute inset-0  flex flex-col justify-between pointer-events-none bg-linear-to-t from-black/80 via-transparent to-black/50"
+      className={cn(
+        "z-10 absolute inset-0",
+        "flex flex-col justify-between",
+        "pointer-events-none",
+        "bg-linear-to-t from-black/80 via-transparent to-black/50",
+      )}
       onPointerMove={lockTimer}
     >
-      <div className="p-4 flex justify-between items-center pointer-events-auto">
+      <div
+        className={cn(
+          "p-4 landscape:p-2",
+          "flex justify-between items-center",
+          "pointer-events-auto",
+        )}
+      >
         {back ? (
           <button onClick={() => router.back()} className="cursor-pointer">
-            <ArrowLeftIcon className="lg:size-13 md:size-10 size-10  max-[340px]:size-5.5 text-muted-foreground" />
+            <ArrowLeftIcon
+              className={cn(
+                "lg:size-13 md:size-10 size-10 landscape:size-7",
+                "text-muted-foreground",
+              )}
+            />
           </button>
         ) : (
           <div className="hidden md:block"></div>
         )}
-        <div className={cn("md:hidden", back ? " text-center" : "")}>
-          <p className="lg:text-lg text-xs max-[340px]:text-[0.6rem] text-muted-foreground">
+        {/* UPPER */}
+        <div
+          className={cn("md:hidden landscape:block", back ? "text-center" : "")}
+        >
+          <p
+            className={cn(
+              "sm:text-xs text-xs landscape:text-[0.6rem]",
+              "text-muted-foreground",
+            )}
+          >
             Your'e Watching
           </p>
-          <h1 className="lg:text-2xl md:text-xl font-semibold">
+          <h1 className="text-sm sm:text-base landscape:text-sm font-semibold">
             {title} {media_type === "tv" ? `S${season}E${episode}` : ""}
           </h1>
         </div>
@@ -167,34 +191,76 @@ export default function MainControls({
           <Layers2
             strokeWidth={3}
             className={cn(
-              "lg:size-8 md:size-7 size-6.5  max-[340px]:size-5.5 ",
+              "lg:size-8 md:size-7 size-6.5 landscape:size-5",
               showServer ? "text-foreground" : "text-muted-foreground",
             )}
           />
         </button>
       </div>
-      <div className="w-full p-4   max-[340px]:px-1 lg:py-6 py-3  max-[340px]:py-1.5  space-y-3  max-[340px]:space-y-1  ">
-        <div className="lg:p-4 p-2  max-[340px]:p-1  pointer-events-none hidden md:block">
-          <span className="flex lg:gap-3 gap-1.5  max-[340px]:gap-1 items-center">
+      <div
+        className={cn(
+          "w-full",
+          "p-4 landscape:p-2",
+          "lg:py-6 py-3",
+          "space-y-3",
+        )}
+      >
+        <div
+          className={cn(
+            "lg:p-4 p-2",
+            "pointer-events-none",
+            "hidden md:block landscape:hidden",
+          )}
+        >
+          <span className={cn("flex lg:gap-3 gap-1.5 items-center")}>
             <div
-              className="lg:w-1 w-0.5  lg:h-5 h-3  max-[340px]:h-2 rounded-full"
+              className={cn("lg:w-1 w-0.5 lg:h-5 h-3 rounded-full")}
               style={{ backgroundColor: `#${color}` }}
             ></div>
-            <p className="lg:text-lg text-sm  max-[340px]:text-[0.6rem] text-muted-foreground">
+            <p className={cn("lg:text-lg md:text-sm text-muted-foreground")}>
               Your'e Watching
             </p>
           </span>
-          <h1 className="lg:text-4xl text-xl  max-[340px]:text-sm font-bold tracking-wide lg:mt-2 mt-1  max-[340px]:mt-0.5">
+          <h1
+            className={cn(
+              "md:text-3xl lg:text-4xl",
+              "lg:mt-2 md:mt-1.5",
+              "font-bold tracking-wide",
+            )}
+          >
             {title}
           </h1>
-          <div className="flex gap-3  max-[340px]:gap-1.5  text-muted-foreground lg:mt-3 mt-1.5  max-[340px]:mt-0.5 font-medium lg:text-lg text-sm  max-[340px]:text-[0.6rem]">
+          <div
+            className={cn(
+              "lg:text-lg md:text-base",
+              "text-muted-foreground font-medium",
+              "md:mt-3",
+              "flex gap-3",
+            )}
+          >
             <p>{year}</p> |<p>{genre}</p>|
-            <p className="">{media_type === "tv" ? "TV Show" : "Movie"}</p>
+            <p>{media_type === "tv" ? "TV Show" : "Movie"}</p>
           </div>
         </div>
-        <div className="space-y-3  max-[340px]:space-y-1 pointer-events-auto ">
-          <div className=" space-y-2 lg:px-3">
-            <div className="group  lg:h-4 h-2  max-[340px]:h-1   max-[340px]:px-1 flex justify-center items-center ">
+        <div
+          className={cn(
+            "space-y-3 landscape:space-y-0.5",
+            "pointer-events-auto",
+          )}
+        >
+          <div
+            className={cn(
+              "space-y-2 landscape:space-y-0.5",
+              "md:px-2 lg:px-3 landscape:px-2",
+            )}
+          >
+            <div
+              className={cn(
+                "group",
+                "lg:h-4 h-2",
+                "flex justify-center items-center",
+              )}
+            >
               <div
                 className="relative w-full"
                 ref={sliderRef}
@@ -215,7 +281,14 @@ export default function MainControls({
 
                 {hoverTime !== null && (
                   <div
-                    className="absolute -top-8 px-2 py-1  text-sm rounded bg-background/70 backdrop-blur-2xl text-foreground pointer-events-none z-40"
+                    className={cn(
+                      "absolute -top-8",
+                      "px-2 py-1",
+                      "text-sm rounded",
+                      "bg-background/70 backdrop-blur-2xl",
+                      "text-foreground",
+                      "pointer-events-none z-40",
+                    )}
                     style={{
                       left: hoverX,
                       transform: "translateX(-50%)",
@@ -231,21 +304,31 @@ export default function MainControls({
                   onValueChange={(value) => controls.handleSeekChange(value)}
                   onValueCommit={(value) => controls.handleSeekCommit(value)}
                   className="relative z-10"
-                  // disabled={!state.canPlay}
                   color={color}
                 />
               </div>
             </div>
-            <div className="md:hidden flex justify-between text-sm">
+            <div
+              className={cn(
+                "md:hidden",
+                "flex justify-between",
+                "text-sm landscape:text-xs",
+              )}
+            >
               <span>{formatTime(state.currentTime)}</span>
               <span>{formatTime(state.duration)}</span>
             </div>
           </div>
-          <div className="flex md:justify-between justify-center items-center w-full  lg:gap-3 gap-6 ">
-            <div className="flex items-center lg:gap-3 gap-6  max-[340px]:gap-1.5">
+          <div
+            className={cn(
+              "flex md:justify-between justify-center items-center",
+              "w-full",
+              "lg:gap-3 gap-6",
+            )}
+          >
+            <div className={cn("flex items-center md:gap-3 gap-6")}>
               <button
                 onClick={controls.togglePlay}
-                // disabled={!state.canPlay}
                 className="text-white/80 hover:text-white cursor-pointer"
               >
                 {state.playing ? (
@@ -256,7 +339,11 @@ export default function MainControls({
                     exit={{ opacity: 0, scale: 1.5 }}
                     transition={{ duration: 0.1 }}
                   >
-                    <PauseIcon className="lg:size-13 md:size-10 size-9  max-[340px]:size-5.5 " />
+                    <PauseIcon
+                      className={cn(
+                        "lg:size-13 md:size-10 size-9 landscape:size-7",
+                      )}
+                    />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -266,7 +353,11 @@ export default function MainControls({
                     exit={{ opacity: 0, scale: 1.5 }}
                     transition={{ duration: 0.1 }}
                   >
-                    <PlayIcon className=" lg:size-13 md:size-10 size-9  max-[340px]:size-5.5" />
+                    <PlayIcon
+                      className={cn(
+                        "lg:size-13 md:size-10 size-9 landscape:size-7",
+                      )}
+                    />
                   </motion.div>
                 )}
               </button>
@@ -277,9 +368,33 @@ export default function MainControls({
                   className="text-white/80 hover:text-white cursor-pointer"
                 >
                   {state.muted || state.volume === 0 ? (
-                    <VolumeOffIcon className="lg:size-13 md:size-10 size-9  max-[340px]:size-5.5" />
+                    <motion.div
+                      key="muted"
+                      initial={{ opacity: 0, scale: 1.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.5 }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      <VolumeOffIcon
+                        className={cn(
+                          "lg:size-13 md:size-10 size-9 landscape:size-7",
+                        )}
+                      />
+                    </motion.div>
                   ) : (
-                    <VolumeOnIcon className="lg:size-13 md:size-10 size-9  max-[340px]:size-5.5" />
+                    <motion.div
+                      key="unmuted"
+                      initial={{ opacity: 0, scale: 1.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.5 }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      <VolumeOnIcon
+                        className={cn(
+                          "lg:size-13 md:size-10 size-9 landscape:size-7",
+                        )}
+                      />
+                    </motion.div>
                   )}
                 </button>
                 <Slider
@@ -288,18 +403,32 @@ export default function MainControls({
                   max={1}
                   step={0.02}
                   onValueChange={([v]) => controls.setVolume(v)}
-                  className=" w-0 group-hover:w-24 transition-[width] duration-200 ease-in-out hidden md:block"
+                  className={cn(
+                    "w-0 group-hover:w-24",
+                    "transition-[width] duration-200 ease-in-out",
+                    "hidden md:block",
+                  )}
                   color={color}
                 />
               </div>
-              <div className="md:flex hidden lg:gap-2 gap-1 items-center lg:ml-2 lg:text-base text-sm  max-[340px]:text-xs">
+              <div
+                className={cn(
+                  "md:flex hidden",
+                  "lg:gap-2 gap-1 items-center",
+                  "lg:ml-2",
+                  "lg:text-base text-sm",
+                )}
+              >
                 <span>{formatTime(state.currentTime)}</span>/
                 <span>{formatTime(state.duration)}</span>
               </div>
 
               {media_type === "tv" && canNext && (
                 <Link
-                  className=" cursor-pointer text-muted-foreground hidden lg:block"
+                  className={cn(
+                    "cursor-pointer text-muted-foreground",
+                    "hidden lg:block",
+                  )}
                   href={`/player/tv/${tmdbId}/${nextSeason}/${nextEpisode}`}
                 >
                   Next Episode S{nextSeason}-E{nextEpisode}
@@ -307,19 +436,16 @@ export default function MainControls({
               )}
             </div>
 
-            <div className="flex items-center lg:gap-4 gap-6  max-[340px]:gap-1.5">
+            <div className={cn("flex items-center md:gap-4 gap-6")}>
               <Settings
                 mergeSubtitles={mergeSubtitles}
                 quality={quality}
                 audioTracks={audioTracks}
-                //
                 onPip={onPip}
-                //
                 imdbId={imdbId}
                 season={season}
                 episode={episode}
                 media_type={media_type}
-                //
                 resetTimer={resetTimer}
                 lockTimer={lockTimer}
                 source={source}
@@ -336,26 +462,48 @@ export default function MainControls({
                 />
               )}
               {/* <button
-                className="text-white/80 hover:text-white cursor-pointer"
-                onClick={() => setCcToggle((prev) => !prev)}
+                onClick={controls.toggleFullscreen}
+                className="cursor-pointer text-white/80 hover:text-white"
               >
-                {cCToggle ? (
-                  <CcOnIcon className="lg:size-13 md:size-10 size-8  max-[340px]:size-5.5" />
-                ) : (
-                  <CcOffIcon className="lg:size-13 md:size-10 size-8  max-[340px]:size-5.5" />
-                )}
-              </button> */}
-              {/* <button className="text-white/80 hover:text-white cursor-pointer">
-                <ServerIcon className="lg:size-12 md:size-9 size-7  max-[340px]:size-5.5" />
+                <Lock
+                  strokeWidth={3}
+                  className={cn(
+                    "lg:size-9 md:size-7 size-6 landscape:size-4.5",
+                  )}
+                />
               </button> */}
               <button
                 onClick={controls.toggleFullscreen}
                 className="cursor-pointer text-white/80 hover:text-white"
               >
                 {state.fullscreen ? (
-                  <MinimizeIcon className="lg:size-13 md:size-10 size-9  max-[340px]:size-5.5" />
+                  <motion.div
+                    key="minimize"
+                    initial={{ opacity: 0, scale: 1.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.5 }}
+                    transition={{ duration: 0.1 }}
+                  >
+                    <MinimizeIcon
+                      className={cn(
+                        "lg:size-13 md:size-10 size-9 landscape:size-7",
+                      )}
+                    />
+                  </motion.div>
                 ) : (
-                  <MaximizeIcon className="lg:size-13 md:size-10 size-9  max-[340px]:size-5.5" />
+                  <motion.div
+                    key="maximize"
+                    initial={{ opacity: 0, scale: 1.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.5 }}
+                    transition={{ duration: 0.1 }}
+                  >
+                    <MaximizeIcon
+                      className={cn(
+                        "lg:size-13 md:size-10 size-9 landscape:size-7",
+                      )}
+                    />
+                  </motion.div>
                 )}
               </button>
             </div>

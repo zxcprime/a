@@ -14,8 +14,8 @@ export const initialServers: ServerTypes[] = [
     desc: "Built-In Subtitle",
   },
   {
-    name: "Talos III",
-    server: "zeus",
+    name: "Daedalus III",
+    server: "daedalus",
     status: "queue",
     desc: "Alternative",
   },
@@ -25,13 +25,13 @@ export const initialServers: ServerTypes[] = [
     status: "queue",
     desc: "Main Server & Multi Audio Support",
   },
+
   {
-    name: "Daedalus V",
-    server: "daedalus",
+    name: "Talos V",
+    server: "zeus",
     status: "queue",
     desc: "Alternative",
   },
-
   {
     name: "Atlas VI",
     server: "atlas_v2",

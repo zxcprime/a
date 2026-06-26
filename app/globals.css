@@ -3,7 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
-
+@custom-variant landscape (@media (max-height: 350px));
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -4,9 +4,9 @@ import { useSubtitleCue } from "./useSubtitleCue ";
 import { useSettingsStore } from "@/zustand/settings-store";
 
 const fontSizeMap: Record<string, string> = {
-  small: "lg:text-2xl text-base",
-  medium: "lg:text-4xl text-lg",
-  large: "lg:text-5xl text-xl",
+  small: "lg:text-2xl md:text-base text-xs",
+  medium: "lg:text-4xl md:text-lg text-sm",
+  large: "lg:text-5xl md:text-xl text-base",
   "x-large": "lg:text-6xl text-2xl",
 };
 
@@ -63,16 +63,24 @@ export default function SubtitleOverlay({
   return (
     <div
       className={cn(
-        "absolute left-1/2 -translate-x-1/2 z-10 text-center px-3  max-[340px]:px-1.5 py-1  rounded  lg:max-w-[80%] max-w-[98%]  pointer-events-none  max-[340px]:text-[0.6rem]",
+        "absolute left-1/2 -translate-x-1/2 z-10",
+        "text-center",
+        "px-3 landscape:px-1.5 py-1",
+        "rounded",
+        "lg:max-w-[80%] max-w-[98%]",
+        "pointer-events-none",
+        "landscape:text-[0.6rem]",
+        "transition duration-300 delay-100",
         fontSizeMap[fontSize] ?? fontSizeMap["medium"],
         bgOpacityMap[bgOpacity] ?? bgOpacityMap["medium"],
+        position === "bottom" ? "bottom-0" : "top-0",
         position === "bottom"
           ? isVisible
-            ? "lg:bottom-30 bottom-18  max-[340px]:bottom-10"
-            : "lg:bottom-10 bottom-5  max-[340px]:bottom-1"
+            ? "-translate-y-25 md:-translate-y-50 lg:-translate-y-50 landscape:-translate-y-18"
+            : "-translate-y-10 md:-translate-y-15 lg:-translate-y-15 landscape:-translate-y-5"
           : isVisible
-            ? "lg:top-25 top-15"
-            : "lg:top-10 top-5",
+            ? "translate-y-15 lg:translate-y-25"
+            : "translate-y-5 lg:translate-y-10",
       )}
       style={{
         color: fontColorMap[fontColor] ?? fontColorMap["white"],

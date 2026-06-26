@@ -14,6 +14,7 @@ import { ChevronRight } from "lucide-react";
 import { AudioTrackTypes, QualityLevel } from "../useVideoPlayer";
 import { SubtitleSettingsModal } from "./subtitle-settings";
 import { DubTypes, QualityTrack } from "@/hooks/source";
+import { cn } from "@/lib/utils";
 
 type ActiveItem = {
   item: SettingsItem;
@@ -216,7 +217,14 @@ export default function Settings({
         </Button>
 
         <button className="text-white/80 hover:text-white cursor-pointer lg:hidden block">
-          <SettingsIcon className="lg:size-13 md:size-9 size-7.5  max-[340px]:size-5" />
+          <motion.div
+            animate={{ rotate: open ? 90 : 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+          >
+            <SettingsIcon
+              className={cn("lg:size-13 md:size-7.5 size-7.5 landscape:size-6")}
+            />
+          </motion.div>
         </button>
       </motion.span>
 
@@ -272,7 +280,7 @@ export default function Settings({
                       </p>
                     </div>
 
-                    <ScrollArea className="lg:max-h-[60vh] max-h-[60vh]  max-[340px]:max-h-[70vh] lg:pl-2 pl-1 lg:pr-3 pr-1.5">
+                    <ScrollArea className="lg:max-h-[60vh] max-h-[60vh]  landscape:max-h-[60vh] lg:pl-2 pl-1 lg:pr-3 pr-1.5">
                       <div className="space-y-1 pt-1 pb-3">
                         {resolvedGroups.map(({ label, items }, i) => (
                           <div key={label}>

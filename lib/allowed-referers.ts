@@ -12,7 +12,7 @@ const ALLOWED_REFERERS = [
   "https://v-zxcstream-xyz.up.railway.app/",
   "https://z-zxcstream-xyz.up.railway.app/",
   "https://x-zxcstream-xyz.up.railway.app/",
-  "http://192.168.1.4:3000/",
+  "http://192.168.1.2:3000/",
 ];
 
 export const ALLOWED_ORIGINS = [
@@ -29,7 +29,7 @@ export const ALLOWED_ORIGINS = [
   "https://v-zxcstream-xyz.up.railway.app",
   "https://z-zxcstream-xyz.up.railway.app",
   "https://x-zxcstream-xyz.up.railway.app",
-  "http://192.168.1.4:3000",
+  "http://192.168.1.2:3000",
 ];
 export function isValidReferer(referer: string): boolean {
   return ALLOWED_REFERERS.some((allowed) => referer.includes(allowed));
