@@ -229,7 +229,7 @@ export default function Player() {
       load,
       handleServerFail,
     });
-  const timer = isMobile ? 5000000 : 5000000;
+  const timer = isMobile ? 5000 : 5000;
   const { isVisible, resetTimer, setIsVisible, lockTimer } =
     useHiddenOverlay(timer);
 
