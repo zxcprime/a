@@ -97,6 +97,13 @@ export const groups: SettingsGroup[] = [
         dynamicKey: "dub",
       },
       {
+        label: "Audio track",
+        value: "Default",
+        Icon: AudioLines,
+        options: [],
+        dynamicKey: "audioTracks",
+      },
+      {
         label: "Download",
         value: "",
         Icon: Download,
@@ -127,13 +134,7 @@ export const groups: SettingsGroup[] = [
         options: opts("Off", "On"),
       },
       { label: "Picture in picture", value: null, Icon: PictureInPicture },
-      {
-        label: "Audio track",
-        value: "Default",
-        Icon: AudioLines,
-        options: [],
-        dynamicKey: "audioTracks",
-      },
+
       // {
       //   label: "Audio boost",
       //   value: "Off",

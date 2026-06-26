@@ -24,6 +24,7 @@ import { CloudIcon } from "@/components/icons/cloud";
 import { ServerIcon } from "@/components/icons/server";
 import { DownloadIcon } from "@/components/icons/download";
 import { cn } from "@/lib/utils";
+import { SeasonsType } from "@/hooks/tmdb-types";
 export interface VideoControlsProps {
   state: VideoPlayerState;
   controls: VideoPlayerControls;
@@ -56,7 +57,7 @@ export interface VideoControlsProps {
   resetTimer: () => void;
   lockTimer: () => void;
   //
-  totalSeasons: number;
+  seasons: SeasonsType[];
 
   source: QualityTrack[];
   //
@@ -102,7 +103,7 @@ export default function MainControls({
   resetTimer,
   lockTimer,
   //
-  totalSeasons,
+  seasons,
   //
   source,
   color,
@@ -458,7 +459,7 @@ export default function MainControls({
                   episode={episode}
                   lockTimer={lockTimer}
                   resetTimer={resetTimer}
-                  totalSeasons={totalSeasons}
+                  seasons={seasons}
                 />
               )}
               {/* <button

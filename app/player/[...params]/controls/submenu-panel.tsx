@@ -43,7 +43,7 @@ export function SubmenuPanel({ item, currentValue, onSelect, onBack }: Props) {
                     onSelect(option);
                   }
                 }} // ← pass full option, not String(id)
-                className="flex items-center justify-between w-full lg:px-3 px-2 lg:py-3 py-2 hover:bg-neutral-800 transition-colors rounded-sm"
+                className="flex items-center justify-between w-full lg:px-3 px-2 lg:py-3 py-2 hover:bg-neutral-800 transition-colors rounded-sm text-left"
               >
                 <span className="text-neutral-300 lg:text-base text-sm">
                   {option.display}

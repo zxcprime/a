@@ -141,7 +141,7 @@ export default function Player() {
   const date = metadata?.release_date;
   const year = date ? String(new Date(date).getFullYear()) : "";
   const genre = metadata?.genres?.[0]?.name ?? "N/A";
-  const totalSeasons = metadata?.number_of_seasons || 0;
+  const seasons = metadata?.seasons ?? [];
   const logo = metadata?.images.logos.find(
     (f) => f.iso_639_1 === "en",
   )?.file_path;
@@ -662,7 +662,7 @@ export default function Player() {
             setCcToggle={setCcToggle}
             resetTimer={resetTimer}
             lockTimer={lockTimer}
-            totalSeasons={totalSeasons}
+            seasons={seasons}
             source={source?.links ?? []}
             color={color}
             back={back}

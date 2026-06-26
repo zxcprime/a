@@ -18,13 +18,13 @@ export function SettingsRow({
     >
       <div className="flex items-center lg:gap-3 gap-2">
         <Icon size={18} className="text-neutral-400 shrink-0" />
-        <span className="text-neutral-300 lg:text-base text-sm line-clamp-1">
+        <span className="text-neutral-300 lg:text-base text-sm line-clamp-1 text-left">
           {label}
         </span>
       </div>
       <div className="flex items-center gap-1.5">
         {value != null && (
-          <span className="text-neutral-500 lg:text-base text-sm line-clamp-1">
+          <span className="text-neutral-500 lg:text-base text-sm line-clamp-1 max-w-20">
             {value}
           </span>
         )}
