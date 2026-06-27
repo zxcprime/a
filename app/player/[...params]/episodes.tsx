@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel } from "swiper/modules";
+import { FreeMode, Keyboard, Mousewheel } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import { useTvSeason } from "@/hooks/get-seasons";
@@ -52,8 +52,6 @@ export default function Episodes({
     resetTimer();
   };
 
-  const params = new URLSearchParams();
-
   return (
     <div>
       <button
@@ -64,7 +62,7 @@ export default function Episodes({
         onPointerMove={lockTimer}
         className="lg:translate-y-0.5 translate-y-1 text-white/80 hover:text-white cursor-pointer"
       >
-        <EpisodesIcon className="lg:size-10.5 md:size-8 size-7.5 landscape:size-6" />
+        <EpisodesIcon className="lg:size-9.5 md:size-7 size-7.5 landscape:size-6" />
       </button>
 
       <AnimatePresence>
@@ -123,7 +121,7 @@ export default function Episodes({
                 </Button>
               </div>
               <Swiper
-                modules={[Mousewheel]}
+                modules={[Mousewheel, Keyboard]}
                 mousewheel={{
                   sensitivity: 1,
                   thresholdDelta: 10,

@@ -16,7 +16,7 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { formatTime } from "@/lib/format-time";
 import { motion } from "framer-motion";
 import Episodes from "../episodes";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DubTypes, QualityTrack } from "@/hooks/source";
 import Link from "next/link";
 import { Cloud, Layers2, Lock, Server } from "lucide-react";
@@ -119,6 +119,7 @@ export default function MainControls({
   const router = useRouter();
   const sliderRef = useRef<HTMLDivElement>(null);
   const [hoverTime, setHoverTime] = useState<number | null>(null);
+  const searchParams = useSearchParams();
   const [hoverX, setHoverX] = useState(0);
   const handleSliderHover = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!sliderRef.current || !state.duration) return;
@@ -229,7 +230,7 @@ export default function MainControls({
               "font-bold tracking-wide",
             )}
           >
-            {title}
+            {title} {media_type === "tv" ? `S${season}E${episode}` : ""}
           </h1>
           <div
             className={cn(
@@ -430,7 +431,7 @@ export default function MainControls({
                     "cursor-pointer text-muted-foreground",
                     "hidden lg:block",
                   )}
-                  href={`/player/tv/${tmdbId}/${nextSeason}/${nextEpisode}`}
+                  href={`/player/tv/${tmdbId}/${nextSeason}/${nextEpisode}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}
                 >
                   Next Episode S{nextSeason}-E{nextEpisode}
                 </Link>
