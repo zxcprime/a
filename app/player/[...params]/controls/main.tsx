@@ -25,6 +25,9 @@ import { ServerIcon } from "@/components/icons/server";
 import { DownloadIcon } from "@/components/icons/download";
 import { cn } from "@/lib/utils";
 import { SeasonsType } from "@/hooks/tmdb-types";
+
+import { IntroTypesResponse } from "@/hooks/intro";
+import { SkipSegment } from "./skip_segment";
 export interface VideoControlsProps {
   state: VideoPlayerState;
   controls: VideoPlayerControls;
@@ -70,6 +73,8 @@ export interface VideoControlsProps {
 
   showServer: boolean;
   setShowServer: Dispatch<SetStateAction<boolean>>;
+
+  introData: IntroTypesResponse | undefined;
 }
 export default function MainControls({
   state,
@@ -115,6 +120,8 @@ export default function MainControls({
   nextSeason,
   showServer,
   setShowServer,
+
+  introData,
 }: VideoControlsProps) {
   const router = useRouter();
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -207,43 +214,52 @@ export default function MainControls({
           "space-y-3",
         )}
       >
-        <div
-          className={cn(
-            "lg:p-4 p-2",
-            "pointer-events-none",
-            "hidden md:block landscape:hidden",
-          )}
-        >
-          <span className={cn("flex lg:gap-3 gap-1.5 items-center")}>
-            <div
-              className={cn("lg:w-1 w-0.5 lg:h-5 h-3 rounded-full")}
-              style={{ backgroundColor: `#${color}` }}
-            ></div>
-            <p className={cn("lg:text-lg md:text-sm text-gray-400")}>
-              Your'e Watching
-            </p>
-          </span>
-          <h1
-            className={cn(
-              "md:text-2xl lg:text-4xl",
-              "lg:mt-2 md:mt-1.5",
-              "font-bold tracking-wide",
-            )}
-          >
-            {title} {media_type === "tv" ? `S${season}E${episode}` : ""}
-          </h1>
+        <div className="flex items-end justify-between lg:p-3 landscape:p-2 md:p-2 ">
           <div
             className={cn(
-              "lg:text-lg md:text-sm",
-              "text-gray-400 font-medium",
-              "md:mt-3",
-              "flex gap-3",
+              "pointer-events-none",
+              "opacity-0 md:opacity-100 landscape:opacity-0",
             )}
           >
-            <p>{year}</p> |<p>{genre}</p>|
-            <p>{media_type === "tv" ? "TV Show" : "Movie"}</p>
+            <span className={cn("flex lg:gap-3 gap-1.5 items-center")}>
+              <div
+                className={cn("lg:w-1 w-0.5 lg:h-5 h-3 rounded-full")}
+                style={{ backgroundColor: `#${color}` }}
+              ></div>
+              <p className={cn("lg:text-lg md:text-sm text-gray-400")}>
+                Your'e Watching
+              </p>
+            </span>
+            <h1
+              className={cn(
+                "md:text-2xl lg:text-4xl",
+                "lg:mt-2 md:mt-1.5",
+                "font-bold tracking-wide",
+              )}
+            >
+              {title} {media_type === "tv" ? `S${season}E${episode}` : ""}
+            </h1>
+            <div
+              className={cn(
+                "lg:text-lg md:text-sm",
+                "text-gray-400 font-medium",
+                "md:mt-3",
+                "flex gap-3",
+              )}
+            >
+              <p>{year}</p> |<p>{genre}</p>|
+              <p>{media_type === "tv" ? "TV Show" : "Movie"}</p>
+            </div>
           </div>
+
+          <SkipSegment
+            currentTime={state.currentTime}
+            intro={introData?.intro}
+            outro={introData?.outro}
+            onSkip={controls.skipTo}
+          />
         </div>
+
         <div
           className={cn(
             "space-y-3 landscape:space-y-0.5",
@@ -307,6 +323,8 @@ export default function MainControls({
                   onValueCommit={(value) => controls.handleSeekCommit(value)}
                   className="relative z-10"
                   color={color}
+                  intro={introData?.intro}
+                  outro={introData?.outro}
                 />
               </div>
             </div>

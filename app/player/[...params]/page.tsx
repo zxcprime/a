@@ -34,6 +34,7 @@ import { ArrowLeftIcon } from "@/components/icons/arrow";
 import Link from "next/link";
 import { useTmdbDetails } from "@/hooks/fetch-details";
 import { useAdStore2 } from "@/zustand/ad-store2";
+import { useIntro } from "@/hooks/intro";
 
 export default function Player() {
   // ─── URL Params ─────────────────────────────────────────────────────────────
@@ -48,10 +49,10 @@ export default function Player() {
   const [showServer, setShowServer] = useState(true);
   const defaultServerIndex = Number(searchParams.get("server")) || 0;
   const domain = searchParams.get("domainAd") || "zxcstream.icu";
-  const color = searchParams.get("color") || "dc2626";
+  const color = searchParams.get("color") || "b91c1c";
 
   const language = searchParams.get("language") || "en-US";
-  const subLang = searchParams.get("subLang") || "english";
+  const subLang = searchParams.get("subLang") || "off";
   const back = searchParams.get("back") === "true";
   const dubLang =
     searchParams.get("dubLang") || searchParams.get("dublang") || "";
@@ -194,6 +195,13 @@ export default function Player() {
     enable: !allFailed,
     dubCode: dub || dubLang,
     dubType: dub || dubLang ? (dub ? type : dubType) : "",
+  });
+
+  const { data: introData } = useIntro({
+    imdbId,
+    season,
+    episode,
+    enabled: media_type === "tv",
   });
 
   // ─── Subtitles ───────────────────────────────────────────────────────────────
@@ -693,6 +701,7 @@ export default function Player() {
             nextSeason={nextSeason}
             showServer={showServer}
             setShowServer={setShowServer}
+            introData={introData}
           />
         )}
       </AnimatePresence>
