@@ -144,7 +144,7 @@ export default function Player() {
   const year = date ? String(new Date(date).getFullYear()) : "";
   const genre = metadata?.genres?.[0]?.name ?? "N/A";
   const seasons = metadata?.seasons ?? [];
-  const logo = metadata?.images.logos.find(
+  const logo = metadata?.images?.logos?.find(
     (f) => f.iso_639_1 === "en",
   )?.file_path;
   useEffect(() => {
