@@ -23,6 +23,7 @@ export interface SourceTypes {
   subtitles: MediaOption[];
   dubs?: DubTypes[];
   active?: ActiveTypes;
+  fallback: boolean
 }
 export interface ActiveTypes {
   langCode: string;

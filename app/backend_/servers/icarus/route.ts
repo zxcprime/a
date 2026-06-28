@@ -860,11 +860,55 @@ export async function GET(req: NextRequest) {
       const downloads = sources?.downloads || [];
 
       if (!downloads.length) {
-        logRequest(404, "no download sources");
-        return NextResponse.json(
-          { success: false, error: "No download sources" },
-          { status: 404 },
+        if (!dubCode) {
+          logRequest(404, "no download sources");
+          return NextResponse.json(
+            { success: false, error: "No download sources" },
+            { status: 404 },
+          );
+        }
+
+        // dub had no sources, retry with first available
+        subjectId = dubs[0].subjectId;
+        detailPath = dubs[0].detailPath;
+        activeDubLang = dubs[0].lanCode ?? "orig";
+        activeDubType = dubs[0].type ?? 0;
+
+        const retryParams = new URLSearchParams({ subjectId, detailPath });
+        if (mediaType === "tv") {
+          if (season) retryParams.set("se", String(season));
+          if (episode) retryParams.set("ep", String(episode));
+        }
+
+        const retryRes = await fetchWithTimeout(
+          `${baseUrl}/subject/download?${retryParams}`,
+          {
+            headers: {
+              ...headers,
+              Referer: `https://fmoviesunblocked.net/spa/videoPlayPage/movies/${detailPath}?id=${subjectId}&type=/movie/detail`,
+              Origin: "https://fmoviesunblocked.net",
+            },
+          },
+          8000,
         );
+
+        const retryJson = await retryRes.json();
+        const retrySources =
+          retryJson?.data?.data || retryJson?.data || retryJson;
+        downloads.push(...(retrySources?.downloads || []));
+        subtitles = (retrySources?.captions || []).map((c: any) => ({
+          id: c.lan,
+          display: c.lanName,
+          file: c.url,
+        }));
+
+        if (!downloads.length) {
+          logRequest(404, "no download sources");
+          return NextResponse.json(
+            { success: false, error: "No download sources" },
+            { status: 404 },
+          );
+        }
       }
 
       sortedDownloads = downloads
@@ -962,11 +1006,12 @@ export async function GET(req: NextRequest) {
       link: `${workingProxy}?url=${encodeURIComponent(d.url)}`,
     }));
 
+    // const activeDub =
+    //   (dubCode ? dubs.find((d: any) => d.lanCode === dubCode) : null) ??
+    //   dubs.find((d: any) => d.original === true) ??
+    //   dubs[0];
     const activeDub =
-      (dubCode ? dubs.find((d: any) => d.lanCode === dubCode) : null) ??
-      dubs.find((d: any) => d.original === true) ??
-      dubs[0];
-
+      dubs.find((d: any) => d.lanCode === activeDubLang) ?? dubs[0];
     logRequest(200, "OK!!!!!");
     return NextResponse.json({
       success: true,
@@ -992,6 +1037,7 @@ export async function GET(req: NextRequest) {
         langName:
           activeDub?.lanName?.replace(/\b(dub|audio)\b/gi, "").trim() ?? "",
       },
+      fallback: dubCode ? dubCode !== activeDub?.lanCode : false,
     });
   } catch (err: any) {
     logRequest(500, `exception: ${err?.message}`);

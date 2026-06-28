@@ -4,24 +4,19 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useDoubleTap } from "use-double-tap";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, TriangleAlert, X } from "lucide-react";
 import { Tailspin } from "ldrs/react";
 import "ldrs/react/Tailspin.css";
-
 import { cn } from "@/lib/utils";
 import { makeKey } from "@/zustand/videoProgressStore";
 import { useSettingsStore } from "@/zustand/settings-store";
-import { useAdStore } from "@/zustand/ad-store";
-
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useHiddenOverlay } from "@/lib/hide-overlay";
-import useMovieById from "@/hooks/metadata";
 import useSource from "@/hooks/source";
 import { useOpenSubtitle } from "@/hooks/open-subtitle";
 import { usePlayerServers } from "./useServers";
 import { useVideoPlayer } from "./useVideoPlayer";
 import { useKeyboardControls } from "./useKeyboard";
-
 import { Button } from "@/components/ui/button";
 import MainControls from "./controls/main";
 import { LyricsServerPicker } from "./serverSelection";
@@ -31,7 +26,6 @@ import DynamicTip from "./tips";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingMetadata from "./logo";
 import { ArrowLeftIcon } from "@/components/icons/arrow";
-import Link from "next/link";
 import { useTmdbDetails } from "@/hooks/fetch-details";
 import { useAdStore2 } from "@/zustand/ad-store2";
 import { useIntro } from "@/hooks/intro";
@@ -60,7 +54,7 @@ export default function Player() {
 
   const dubType =
     searchParams.get("dubType") || searchParams.get("dubtype") || "0";
-
+  const [showFallbackBanner, setShowFallbackBanner] = useState(false);
   const auto_play = searchParams.get("autoplay") === "true";
   const enableSaveProgress = searchParams.get("save_progress") !== "false"; // default true
   const enableLoadProgress = searchParams.get("load_progress") !== "false"; // default true
@@ -305,6 +299,14 @@ export default function Player() {
     });
   }, [source?.dubs]);
 
+  useEffect(() => {
+    if (!source?.fallback) return;
+    if (!state.canPlay) return;
+    if (fetchServer.server !== "icarus") return;
+    setShowFallbackBanner(true);
+    const timer = setTimeout(() => setShowFallbackBanner(false), 5000);
+    return () => clearTimeout(timer);
+  }, [source?.fallback, state.canPlay]);
   // useEffect(() => {
   //   dubLangApplied.current = false;
   //    if (!source?.dubs?.[0]) return;
@@ -400,8 +402,10 @@ export default function Player() {
   useEffect(() => {
     if (state.canPlay) {
       setShowServer(false);
+      resetTimer();
     } else {
       setShowServer(true);
+      lockTimer();
     }
   }, [state.canPlay]);
 
@@ -509,6 +513,36 @@ export default function Player() {
       )}
       onClick={color === "305CDE" ? undefined : triggerAd}
     >
+      <AnimatePresence>
+        {showFallbackBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className={cn(
+              "absolute lg:top-4 top-2 inset-x-0  flex justify-center items-center z-30",
+            )}
+          >
+            <div
+              className={cn(
+                "flex items-center lg:gap-3 md:gap-2 gap-1.5",
+                "bg-amber-600/80 backdrop-blur-md rounded-md",
+                "text-foreground lg:text-base md:text-sm text-xs  lg:px-4 md:px-3 px-2 lg:py-2.5 py-1.5",
+              )}
+            >
+              <TriangleAlert className="md:size-4 size-3" />
+              <h3>Language unavailable, falling back to default.</h3>
+              <button
+                onClick={() => setShowFallbackBanner(false)}
+                className="hover:opacity-70"
+              >
+                <X className="md:size-4 size-3" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Video */}
       <div className="h-full w-full">
         <video

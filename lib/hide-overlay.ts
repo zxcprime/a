@@ -10,7 +10,6 @@ export function useHiddenOverlay(delay = 3000) {
       timeoutRef.current = null;
     }
   };
-
   const startTimer = useCallback(() => {
     clearTimer();
     timeoutRef.current = setTimeout(() => {
@@ -22,6 +21,7 @@ export function useHiddenOverlay(delay = 3000) {
     setIsVisible(true);
     startTimer();
   }, [startTimer]);
+
   const lockTimer = useCallback(() => {
     setIsVisible(true);
     clearTimer();
