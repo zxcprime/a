@@ -464,6 +464,11 @@ export async function GET(req: NextRequest) {
     }
 
     const proxies = [
+      "https://blue-hat-477a.jerometecson333.workers.dev/",
+      "https://late-snowflake-5076.zxcprime362.workers.dev/",
+      "https://empty-pond-805b.zxcprime363.workers.dev/",
+      "https://orange-paper-a80d.j61202287.workers.dev/",
+      "https://weathered-frost-60b0.zxcprime361.workers.dev/",
       "https://long-frog-ec4e.coupdegrace21799.workers.dev/",
       "https://damp-bird-f3a9.jerometecsonn.workers.dev/",
       "https://damp-bonus-5625.mosangfour.workers.dev/",
@@ -492,11 +497,6 @@ export async function GET(req: NextRequest) {
       // "https://silent-glitter-744f.zxcprime365.workers.dev/",
       // "https://nameless-feather-4fca.zxcprime364.workers.dev/",
       // "https://sweet-dust-bdb3.vetenabejar.workers.dev/",
-      // "https://blue-hat-477a.jerometecson333.workers.dev/",
-      // "https://late-snowflake-5076.zxcprime362.workers.dev/",
-      // "https://empty-pond-805b.zxcprime363.workers.dev/",
-      // "https://orange-paper-a80d.j61202287.workers.dev/",
-      // "https://weathered-frost-60b0.zxcprime361.workers.dev/",
     ];
 
     const shuffledProxies = [...proxies].sort(() => Math.random() - 0.5);
