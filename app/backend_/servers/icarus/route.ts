@@ -9,6 +9,32 @@ const supabase = createClient(
   process.env.SUPABASE_URL_MOVIEBOX!,
   process.env.SUPABASE_SERVICE_ROLE_KEY_MOVIEBOX!,
 );
+async function getNext8AMPH(): Promise<string> {
+  const now = new Date();
+  const ph = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+  const next8AM = new Date(ph);
+  next8AM.setHours(8, 0, 0, 0);
+  if (ph >= next8AM) next8AM.setDate(next8AM.getDate() + 1);
+  const diff = next8AM.getTime() - ph.getTime();
+  return new Date(now.getTime() + diff).toISOString();
+}
+async function blacklistProxy(proxy: string) {
+  await supabase
+    .from("proxy_blacklist")
+    .upsert(
+      { proxy, expires_at: await getNext8AMPH(), hit_count: 1 },
+      { onConflict: "proxy", ignoreDuplicates: false },
+    );
+  console.log(`[PROXY] ⛔ blacklisted ${proxy}`);
+}
+async function getActiveProxies(proxies: string[]): Promise<string[]> {
+  const { data } = await supabase
+    .from("proxy_blacklist")
+    .select("proxy")
+    .gt("expires_at", new Date().toISOString());
+  const blocked = new Set((data ?? []).map((r: any) => r.proxy));
+  return proxies.filter((p) => !blocked.has(p));
+}
 
 function getRandomAfricanIP() {
   const ranges: [number, number][] = [
@@ -53,26 +79,31 @@ function getRandomAfricanIP() {
 }
 
 export async function getWorkingProxy(url: string, proxies: string[]) {
-  for (const proxy of proxies) {
+  const activeProxies = await getActiveProxies(proxies);
+  if (!activeProxies.length) return null;
+
+  for (const proxy of activeProxies) {
     try {
-      const testUrl = `${proxy}?url=${encodeURIComponent(url)}`;
       const res = await fetchWithTimeout(
-        testUrl,
+        `${proxy}?url=${encodeURIComponent(url)}`,
         { method: "HEAD", headers: { Range: "bytes=0-1" } },
-        3000,
+        8000,
       );
+      if (res.status === 429) {
+        await blacklistProxy(proxy);
+        continue;
+      }
       if (res.ok || res.status === 206) {
-        // console.log(`[PROXY] ✓ ${proxy} | ${res.status}`);
+        console.log(`[PROXY] ✓ ${proxy} | ${res.status}`);
         return proxy;
       }
-      // console.log(`[PROXY] ✗ ${proxy} | ${res.status}`);
+      console.log(`[PROXY] ✗ ${proxy} | ${res.status}`);
     } catch (e: any) {
-      // console.log(`[PROXY] ✗ ${proxy} | ${e?.message}`);
+      console.log(`[PROXY] ✗ ${proxy} | ${e?.message}`);
     }
   }
   return null;
 }
-
 export async function GET(req: NextRequest) {
   const logRequest = (status: number, reason: string) => {
     const tmdbId = req.nextUrl.searchParams.get(FIELD_MAP.id);
@@ -454,9 +485,9 @@ export async function GET(req: NextRequest) {
     }
 
     const proxies = [
+      "https://empty-pond-805b.zxcprime363.workers.dev/",
       "https://blue-hat-477a.jerometecson333.workers.dev/",
       "https://late-snowflake-5076.zxcprime362.workers.dev/",
-      "https://empty-pond-805b.zxcprime363.workers.dev/",
       "https://orange-paper-a80d.j61202287.workers.dev/",
       "https://weathered-frost-60b0.zxcprime361.workers.dev/",
       "https://long-frog-ec4e.coupdegrace21799.workers.dev/",
@@ -472,7 +503,6 @@ export async function GET(req: NextRequest) {
       // "https://proxy.zxcprime3.workers.dev/",
       // "https://proxy.zxcprime2.workers.dev/",
       // "https://proxy.zxcprime1.workers.dev/",
-
       // "https://proxy.zxcprime.workers.dev/",
       // "https://proxy.angela-estes-o08.workers.dev/",
       // "https://orange-poetry-e481.jindaedalus2.workers.dev/",
