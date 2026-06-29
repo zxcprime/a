@@ -465,13 +465,14 @@ export async function GET(req: NextRequest) {
 
     const proxies = [
       "https://proxy.test4-eb0.workers.dev/",
-      // "https://proxy.test3-ed1.workers.dev/",
-      // "https://proxy.test2-425.workers.dev/",
-      // "https://proxy.test1-845.workers.dev/",
+      "https://proxy.test3-ed1.workers.dev/",
+      "https://proxy.test2-425.workers.dev/",
+      "https://proxy.test1-845.workers.dev/",
       // "https://proxy.zxcprime4.workers.dev/",
       // "https://proxy.zxcprime3.workers.dev/",
       // "https://proxy.zxcprime2.workers.dev/",
       // "https://proxy.zxcprime1.workers.dev/",
+
       // "https://proxy.zxcprime.workers.dev/",
       // "https://proxy.angela-estes-o08.workers.dev/",
       // "https://orange-poetry-e481.jindaedalus2.workers.dev/",
