@@ -485,6 +485,11 @@ export async function GET(req: NextRequest) {
     }
 
     const proxies = [
+      "https://icarus.test153-224.workers.dev/",
+      "https://icarus.test152-5d8.workers.dev/",
+      "https://icarus.test151-009.workers.dev/",
+      "https://icarus.test150-e8d.workers.dev/",
+
       "https://proxy.zxcprime359-test1.workers.dev/",
       "https://proxy.orbitprime27.workers.dev/",
       "https://proxy.silverlantern64.workers.dev/",
