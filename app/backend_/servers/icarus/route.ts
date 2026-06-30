@@ -35,7 +35,14 @@ async function getActiveProxies(proxies: string[]): Promise<string[]> {
   const blocked = new Set((data ?? []).map((r: any) => r.proxy));
   return proxies.filter((p) => !blocked.has(p));
 }
-
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 function getRandomAfricanIP() {
   const ranges: [number, number][] = [
     [41, 57],
@@ -80,9 +87,10 @@ function getRandomAfricanIP() {
 
 export async function getWorkingProxy(url: string, proxies: string[]) {
   const activeProxies = await getActiveProxies(proxies);
-  if (!activeProxies.length) return null;
+  const shuffledProxies = shuffle(activeProxies);
+  if (!shuffledProxies.length) return null;
 
-  for (const proxy of activeProxies) {
+  for (const proxy of shuffledProxies) {
     try {
       const res = await fetchWithTimeout(
         `${proxy}?url=${encodeURIComponent(url)}`,
@@ -94,12 +102,12 @@ export async function getWorkingProxy(url: string, proxies: string[]) {
         continue;
       }
       if (res.ok || res.status === 206) {
-        console.log(`[PROXY] ✓ ${proxy} | ${res.status}`);
+        // console.log(`[PROXY] ✓ ${proxy} | ${res.status}`);
         return proxy;
       }
-      console.log(`[PROXY] ✗ ${proxy} | ${res.status}`);
+      // console.log(`[PROXY] ✗ ${proxy} | ${res.status}`);
     } catch (e: any) {
-      console.log(`[PROXY] ✗ ${proxy} | ${e?.message}`);
+      // console.log(`[PROXY] ✗ ${proxy} | ${e?.message}`);
     }
   }
   return null;
@@ -515,11 +523,7 @@ export async function GET(req: NextRequest) {
       "https://weathered-frost-60b0.zxcprime361.workers.dev/",
     ];
 
-    const shuffledProxies = [...proxies].sort(() => Math.random() - 0.5);
-    const workingProxy = await getWorkingProxy(
-      sortedDownloads[0].url,
-      shuffledProxies,
-    );
+    const workingProxy = await getWorkingProxy(sortedDownloads[0].url, proxies);
     if (!workingProxy) {
       logRequest(502, "no working proxy");
       return NextResponse.json(

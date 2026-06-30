@@ -4,13 +4,17 @@ import { isValidReferer } from "@/lib/allowed-referers";
 import { fetchWithTimeout } from "@/lib/fetch-timeout";
 import { FIELD_MAP } from "@/lib/token";
 import { createClient } from "@supabase/supabase-js";
-
+//ZXCTEST8
 const supabase = createClient(
   process.env.SUPABASE_URL_BERKAS!,
   process.env.SUPABASE_SERVICE_ROLE_KEY_BERKAS!,
 );
 
 const PROXY_WORKERS = [
+  "https://berkas.test013.workers.dev/",
+  "https://berkas.test015-505.workers.dev/",
+  "https://berkas.test016.workers.dev/",
+  "https://berkas.test014-25a.workers.dev/",
   "https://berkas.test09-635.workers.dev/",
   "https://berkas.test010-f3d.workers.dev/",
   "https://berkas.test011.workers.dev/",
