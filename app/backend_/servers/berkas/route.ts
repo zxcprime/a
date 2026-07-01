@@ -15,6 +15,10 @@ const supabase = createClient(
 );
 
 const PROXY_WORKERS = [
+  "https://berkas.test024.workers.dev/",
+  "https://berkas.test023.workers.dev/",
+  "https://berkas.test022.workers.dev/",
+  "https://berkas.test021.workers.dev/",
   "https://berkas.test017.workers.dev/",
   "https://berkas.test019.workers.dev/",
   "https://berkas.test018.workers.dev/",
